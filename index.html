@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>重量分摊</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#f2f2f7;padding:16px;margin:0}
+h1{font-size:30px}
+.card{background:#fff;padding:14px;border-radius:16px;margin-bottom:12px}
+input{width:100%;padding:14px;font-size:17px;border-radius:12px;border:1px solid #ddd;box-sizing:border-box}
+.row{display:grid;grid-template-columns:1.4fr .8fr 1fr;gap:8px;align-items:center}
+.ton{background:#eef6ff;padding:14px;border-radius:12px;text-align:center;font-weight:bold}
+button{width:100%;padding:15px;border:none;border-radius:14px;background:#1677ff;color:#fff;font-size:17px;margin-top:12px}
+.clear{background:#ff4d4f}
+</style>
+</head>
+<body>
+
+<h1>重量分摊</h1>
+
+<div class="card">
+<div>总重量(kg)</div>
+<input id="kg" type="number" value="1555" oninput="calc()">
+</div>
+
+<div id="rows"></div>
+
+<button onclick="addRow()">＋新增一行</button>
+<button class="clear" onclick="clearAll()">清空</button>
+
+<script>
+
+function addRow(spec='',qty=''){
+const div=document.createElement('div');
+div.className='card';
+div.innerHTML=`
+<div class="row">
+<input class="spec" placeholder="1.0*255" value="${spec}" oninput="calc()">
+<input class="qty" type="number" placeholder="片数" value="${qty}" oninput="calc()">
+<div class="ton">0.000吨</div>
+</div>
+`;
+document.getElementById('rows').appendChild(div);
+calc();
+}
+
+function calc(){
+
+const totalKg=parseFloat(document.getElementById('kg').value)||0;
+
+const specs=document.querySelectorAll('.spec');
+const qtys=document.querySelectorAll('.qty');
+const tons=document.querySelectorAll('.ton');
+
+let vals=[];
+let total=0;
+
+for(let i=0;i<specs.length;i++){
+
+let width=0;
+
+if(specs[i].value.includes('*')){
+width=parseFloat(specs[i].value.split('*')[1])||0;
+}
+
+let qty=parseFloat(qtys[i].value)||0;
+
+let val=width*qty;
+
+vals.push(val);
+
+total+=val;
+}
+
+for(let i=0;i<vals.length;i++){
+
+let ton=total ? vals[i]/total*totalKg/1000 : 0;
+
+tons[i].innerHTML=ton.toFixed(3)+'吨';
+}
+
+save();
+}
+
+function save(){
+
+const arr=[];
+
+document.querySelectorAll('.card').forEach((c,index)=>{
+
+if(index===0)return;
+
+arr.push({
+spec:c.querySelector('.spec').value,
+qty:c.querySelector('.qty').value
+});
+
+});
+
+localStorage.setItem('rows',JSON.stringify(arr));
+localStorage.setItem('kg',document.getElementById('kg').value);
+
+}
+
+function load(){
+
+const kg=localStorage.getItem('kg');
+
+if(kg) document.getElementById('kg').value=kg;
+
+const arr=JSON.parse(localStorage.getItem('rows')||'[]');
+
+if(arr.length){
+
+arr.forEach(r=>addRow(r.spec,r.qty));
+
+}else{
+
+for(let i=0;i<5;i++) addRow();
+
+}
+
+}
+
+function clearAll(){
+
+localStorage.clear();
+location.reload();
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

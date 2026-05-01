@@ -18,120 +18,205 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 margin:0;
 padding:0;
 box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f2f2f7;
+background:#f5f5f7;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-padding:18px;
+padding:14px;
 color:#111;
 }
 
 h1{
-font-size:42px;
-font-weight:900;
-margin-bottom:22px;
-}
-
-.card{
-background:#fff;
-border-radius:24px;
-padding:16px;
-margin-bottom:16px;
-box-shadow:0 2px 12px rgba(0,0,0,.03);
-}
-
-.label{
-font-size:18px;
-color:#666;
-margin-bottom:10px;
-}
-
-.totalInput{
-width:100%;
-height:72px;
-border:2px solid #e5e5ea;
-border-radius:20px;
-padding:0 18px;
 font-size:34px;
-font-weight:800;
+font-weight:900;
+margin-bottom:14px;
+}
+
+.top{
+background:#fff;
+border-radius:16px;
+padding:14px;
+margin-bottom:12px;
+border:1px solid #e5e5ea;
+}
+
+.topLabel{
+font-size:15px;
+color:#666;
+margin-bottom:8px;
+}
+
+#kg{
+width:100%;
+height:52px;
+border:none;
 outline:none;
+background:#f7f7f8;
+border-radius:12px;
+padding:0 14px;
+font-size:28px;
+font-weight:800;
+}
+
+.table{
+
+background:#fff;
+border-radius:16px;
+overflow:hidden;
+border:1px solid #e5e5ea;
+
+}
+
+.header{
+
+display:grid;
+grid-template-columns:1.3fr .8fr .8fr 44px;
+gap:8px;
+
+padding:10px 12px;
+
+background:#f2f2f7;
+
+font-size:14px;
+
+font-weight:700;
+
+color:#666;
+
 }
 
 .row{
-display:flex;
+
+display:grid;
+
+grid-template-columns:1.3fr .8fr .8fr 44px;
+
+gap:8px;
+
+padding:10px 12px;
+
+border-top:1px solid #f0f0f0;
+
 align-items:center;
-gap:10px;
-}
 
-.spec{
-flex:1.2;
-}
-
-.qty{
-width:120px;
-flex:none;
 }
 
 .input{
-height:64px;
-border:2px solid #e5e5ea;
-border-radius:18px;
-padding:0 12px;
-font-size:24px;
-font-weight:700;
+
+width:100%;
+
+height:44px;
+
+border:none;
+
 outline:none;
+
+background:#f7f7f8;
+
+border-radius:10px;
+
+padding:0 10px;
+
+font-size:20px;
+
+font-weight:700;
+
 text-align:center;
-background:#fff;
+
 }
 
 .result{
-width:108px;
-height:64px;
-border-radius:18px;
+
+height:44px;
+
 background:#eef5ff;
+
+border-radius:10px;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
-font-size:22px;
-font-weight:900;
-flex:none;
+
+font-size:18px;
+
+font-weight:800;
+
+color:#1677ff;
+
 }
 
 .del{
-width:58px;
-height:58px;
+
+width:44px;
+
+height:44px;
+
 border:none;
-border-radius:18px;
+
+border-radius:10px;
+
 background:#ff4d4f;
+
 color:#fff;
-font-size:34px;
+
+font-size:26px;
+
 font-weight:bold;
-flex:none;
+
+}
+
+.bottom{
+
+display:flex;
+
+gap:10px;
+
+margin-top:14px;
+
 }
 
 .addBtn{
-width:100%;
-height:68px;
+
+flex:1;
+
+height:52px;
+
 border:none;
-border-radius:22px;
+
+border-radius:14px;
+
 background:#1677ff;
+
 color:#fff;
-font-size:26px;
+
+font-size:19px;
+
 font-weight:800;
-margin-top:8px;
+
 }
 
 .clearBtn{
-width:100%;
-height:68px;
+
+width:110px;
+
+height:52px;
+
 border:none;
-border-radius:22px;
+
+border-radius:14px;
+
 background:#ff4d4f;
+
 color:#fff;
-font-size:26px;
+
+font-size:18px;
+
 font-weight:800;
-margin-top:14px;
+
 }
 
 </style>
@@ -142,29 +227,56 @@ margin-top:14px;
 
 <h1>重量分摊</h1>
 
-<div class="card">
+<div class="top">
 
-<div class="label">总重量 (kg)</div>
+<div class="topLabel">
+总重量（kg）
+</div>
 
 <input
 id="kg"
-class="totalInput"
 type="number"
-placeholder="输入总重量"
+placeholder="输入重量"
 oninput="calc()"
 >
 
 </div>
 
+<div class="table">
+
+<div class="header">
+
+<div>规格</div>
+
+<div>数量</div>
+
+<div>吨数</div>
+
+<div></div>
+
+</div>
+
 <div id="rows"></div>
 
-<button class="addBtn" onclick="addRow()">
-＋ 新增一行
+</div>
+
+<div class="bottom">
+
+<button
+class="addBtn"
+onclick="addRow()"
+>
+＋ 新增
 </button>
 
-<button class="clearBtn" onclick="clearAll()">
-清空全部
+<button
+class="clearBtn"
+onclick="clearAll()"
+>
+清空
 </button>
+
+</div>
 
 <script>
 
@@ -172,11 +284,9 @@ function addRow(spec='',qty=''){
 
 const div=document.createElement('div');
 
-div.className='card';
+div.className='row';
 
 div.innerHTML=`
-
-<div class="row">
 
 <input
 class="input spec"
@@ -193,16 +303,16 @@ value="${qty}"
 oninput="calc()"
 >
 
-<div class="result">0.000吨</div>
+<div class="result">
+0.000
+</div>
 
 <button
 class="del"
 onclick="removeRow(this)"
 >
-−
+×
 </button>
-
-</div>
 
 `;
 
@@ -214,7 +324,7 @@ calc();
 
 function removeRow(btn){
 
-btn.closest('.card').remove();
+btn.parentElement.remove();
 
 calc();
 
@@ -223,13 +333,21 @@ calc();
 function calc(){
 
 const totalKg=
-parseFloat(document.getElementById('kg').value)||0;
+parseFloat(
+document.getElementById('kg').value
+)||0;
 
-const specs=document.querySelectorAll('.spec');
-const qtys=document.querySelectorAll('.qty');
-const results=document.querySelectorAll('.result');
+const specs=
+document.querySelectorAll('.spec');
+
+const qtys=
+document.querySelectorAll('.qty');
+
+const results=
+document.querySelectorAll('.result');
 
 let vals=[];
+
 let total=0;
 
 for(let i=0;i<specs.length;i++){
@@ -238,13 +356,15 @@ let width=0;
 
 if(specs[i].value.includes('*')){
 
-width=parseFloat(
+width=
+parseFloat(
 specs[i].value.split('*')[1]
 )||0;
 
 }
 
-let qty=parseFloat(qtys[i].value)||0;
+let qty=
+parseFloat(qtys[i].value)||0;
 
 let val=width*qty;
 
@@ -264,7 +384,7 @@ total
 0;
 
 results[i].innerHTML=
-ton.toFixed(3)+'吨';
+ton.toFixed(3);
 
 }
 
@@ -276,14 +396,14 @@ function save(){
 
 const rows=[];
 
-document.querySelectorAll('#rows .card')
-.forEach(card=>{
+document.querySelectorAll('.row')
+.forEach(r=>{
 
 rows.push({
 
-spec:card.querySelector('.spec').value,
+spec:r.querySelector('.spec').value,
 
-qty:card.querySelector('.qty').value
+qty:r.querySelector('.qty').value
 
 });
 
@@ -303,7 +423,8 @@ document.getElementById('kg').value
 
 function load(){
 
-const kg=localStorage.getItem('kg');
+const kg=
+localStorage.getItem('kg');
 
 if(kg){
 
@@ -326,7 +447,11 @@ addRow(r.spec,r.qty);
 
 }else{
 
+for(let i=0;i<5;i++){
+
 addRow();
+
+}
 
 }
 
